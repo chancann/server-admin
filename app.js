@@ -8,10 +8,8 @@ const cors = require("cors");
 dotenv.config();
 
 // require routes
+const roleRoute = require("./router/roleRoute");
 const userRoute = require("./router/userRoute");
-const productRoute = require("./router/productRoute");
-const newsRoute = require("./router/newsRoute");
-const appointmentRoute = require("./router/appointmentRoute");
 
 // middleware
 app.use(express.json());
@@ -20,9 +18,9 @@ app.use(cors());
 
 // Routes
 app.use("/api/user", userRoute);
-app.use("/api/product", productRoute);
-app.use("/api/news", newsRoute);
-app.use("/api/appointment", appointmentRoute);
+app.use("/api/role", roleRoute);
+// app.use("/api/news", newsRoute);
+// app.use("/api/appointment", appointmentRoute);
 
 mongoose
   .connect(process.env.MONGO_URL, { useNewUrlParser: true })

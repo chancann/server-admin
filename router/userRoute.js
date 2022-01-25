@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
 });
 
 // create user
-router.post("/add", isLoggedIn, requireAdmin, async (req, res) => {
+router.post("/add", async (req, res) => {
   try {
     // check if user email already register
     const isEmailExist = await User.findOne({ email: req.body.email, is_deleted: false });
@@ -44,14 +44,14 @@ router.post("/add", isLoggedIn, requireAdmin, async (req, res) => {
     }
 
     // hash user password and give default role
-    const user = {
-      email: req.body.email,
-      username: req.body.username,
-      password: CryptoJS.AES.encrypt(req.body.password, process.env.CRYPTO_SEC).toString(),
-      role: "user",
-    };
+    // const user = {
+    //   email: req.body.email,
+    //   username: req.body.username,
+    //   password: ,
+    //   role: "user",
+    // };
 
-    const newUser = new User(user);
+    const newUser = new User({ ...req.body, password: CryptoJS.AES.encrypt(req.body.password, process.env.CRYPTO_SEC).toString() });
     const response = await newUser.save();
     if (!response) throw new Error("Failed to create user");
 
@@ -127,7 +127,7 @@ router.get("/details/:id", isLoggedIn, requireAdmin, async (req, res) => {
 });
 
 // delete user by id
-router.delete("/:id", isLoggedIn, requireAdmin, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const response = await User.findByIdAndUpdate(id, { is_deleted: true });
