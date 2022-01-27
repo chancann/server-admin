@@ -2,24 +2,28 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const PORT = 3000;
+const PORT = 8080;
+const path = require("path");
+const cors = require("cors");
 dotenv.config();
 
 // require routes
-const userRoute = require("./router/userRouter");
-const productRoute = require('./router/productRouter');
+const roleRoute = require("./router/roleRoute");
+const userRoute = require("./router/userRoute");
 
 // middleware
 app.use(express.json());
+app.use("/images", express.static(path.join(__dirname, "images")));
+app.use(cors());
 
 // Routes
-app.use("/user", userRoute);
-app.use("/product", productRoute);
+app.use("/api/user", userRoute);
+app.use("/api/role", roleRoute);
+// app.use("/api/news", newsRoute);
+// app.use("/api/appointment", appointmentRoute);
 
 mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true
-  })
+  .connect(process.env.MONGO_URL, { useNewUrlParser: true })
   .then(() => {
     console.log("Connected to database");
     app.listen(PORT, () => {
@@ -29,4 +33,3 @@ mongoose
   .catch((err) => {
     console.log(`Something wrong ${err}`);
   });
-
