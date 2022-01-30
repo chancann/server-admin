@@ -105,6 +105,44 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/request", isLoggedIn, requireAdmin, async (req, res) => {
+  try {
+    const response = await User.find({ is_verified: false });
+    if (response) {
+      res.send({
+        status: 200,
+        data: response,
+      });
+    } else {
+      res.send({
+        status: 400,
+        data: `failed to get user`,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+router.get("/request", isLoggedIn, requireAdmin, async (req, res) => {
+  try {
+    const response = await User.find({ is_verified: true });
+    if (response) {
+      res.send({
+        status: 200,
+        data: response,
+      });
+    } else {
+      res.send({
+        status: 400,
+        data: `failed to get user`,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 // get detail user by id
 router.get("/details/:id", isLoggedIn, requireAdmin, async (req, res) => {
   const { id } = req.params;

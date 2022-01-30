@@ -8,8 +8,9 @@ const cors = require("cors");
 dotenv.config();
 
 // require routes
-const roleRoute = require("./router/roleRoute");
+// const roleRoute = require("./router/roleRoute");
 const userRoute = require("./router/userRoute");
+const productRoute = require("./router/productRoute");
 
 // middleware
 app.use(express.json());
@@ -18,7 +19,8 @@ app.use(cors());
 
 // Routes
 app.use("/api/user", userRoute);
-app.use("/api/role", roleRoute);
+// app.use("/api/role", roleRoute);
+app.use("/api/product", productRoute)
 // app.use("/api/news", newsRoute);
 // app.use("/api/appointment", appointmentRoute);
 

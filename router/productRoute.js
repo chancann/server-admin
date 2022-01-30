@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 // create Product
-router.post("/add", isLoggedIn, requireAdmin, upload.array("images"), async (req, res) => {
+router.post("/add", isLoggedIn, upload.array("images"), async (req, res) => {
   try {
     // ** when when user upload image req.body will hiject
     if (req.files) {
