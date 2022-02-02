@@ -7,7 +7,7 @@ const deleteImage = require("../utils/deleteImage");
 // get all Products
 router.get("/", async (req, res) => {
   try {
-    const response = await Product.find({ is_deleted: false }).populate("author")
+    const response = await Product.find({ is_deleted: false }).populate("author");
     res.send({
       data: {
         status: 200,
@@ -51,7 +51,7 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     //** finding Product in database
-    const response = await Product.findById(id);
+    const response = await Product.findById(id).populate("author");
 
     // ** Product response
     if (response) {
@@ -114,7 +114,7 @@ router.put("/:id", isLoggedIn, requireAdmin, upload.array("images"), async (req,
 });
 
 // delete products
-router.delete("/:id", isLoggedIn, requireAdmin, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findById(id);

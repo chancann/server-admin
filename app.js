@@ -20,7 +20,7 @@ app.use(cors());
 // Routes
 app.use("/api/user", userRoute);
 // app.use("/api/role", roleRoute);
-app.use("/api/product", productRoute)
+app.use("/api/product", productRoute);
 // app.use("/api/news", newsRoute);
 // app.use("/api/appointment", appointmentRoute);
 
