@@ -2,13 +2,15 @@ const router = require("express").Router();
 const User = require("../model/User");
 const CryptoJS = require("crypto-js");
 const JWT = require("jsonwebtoken");
+const upload = require("../utils/multer");
+const deleteImage = require("../utils/deleteImage");
 const { isLoggedIn, requireAdmin } = require("../middleware/auth");
 
 // get all user
 router.get("/", async (req, res) => {
   const { sort } = req.query;
   try {
-    let response = await User.find({ is_deleted: false });
+    let response = await User.find({ is_deleted: false, is_verified: true });
 
     // query
     if (sort === "asc") {
@@ -92,7 +94,7 @@ router.post("/login", async (req, res) => {
       return;
     }
 
-    const token = JWT.sign({ _id: user._id, email: user.email, username: user.username, role: user.role }, process.env.JWT_SEC, { expiresIn: "3d" });
+    const token = JWT.sign({ _id: user._id, email: user.email, nama: user.nama_lengkap, role: user.role, }, process.env.JWT_SEC, { expiresIn: "3d" });
     res.send({
       status: 200,
       data: {
@@ -105,7 +107,29 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/request", isLoggedIn, requireAdmin, async (req, res) => {
+// fixup
+// update verified to true
+router.post("/verify/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await User.findByIdAndUpdate(id, { is_verified: true }, { new: true });
+    if (response) {
+      res.send({
+        status: 200,
+        data: "verified!",
+      });
+    } else {
+      res.send({
+        status: 400,
+        data: `failed to verifiy user`,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+router.get("/request", async (req, res) => {
   try {
     const response = await User.find({ is_verified: false });
     if (response) {
@@ -124,27 +148,8 @@ router.get("/request", isLoggedIn, requireAdmin, async (req, res) => {
   }
 });
 
-router.get("/request", isLoggedIn, requireAdmin, async (req, res) => {
-  try {
-    const response = await User.find({ is_verified: true });
-    if (response) {
-      res.send({
-        status: 200,
-        data: response,
-      });
-    } else {
-      res.send({
-        status: 400,
-        data: `failed to get user`,
-      });
-    }
-  } catch (error) {
-    res.send(error);
-  }
-});
-
 // get detail user by id
-router.get("/details/:id", isLoggedIn, requireAdmin, async (req, res) => {
+router.get("/details/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const response = await User.findOne({ _id: id });
@@ -164,11 +169,43 @@ router.get("/details/:id", isLoggedIn, requireAdmin, async (req, res) => {
   }
 });
 
+// get updateUser
+router.put("/update/:id", upload.single("image"), async (req, res) => {
+  const { id } = req.params;
+  try {
+      // ** find product
+      const isUser = await User.findById(id);
+
+      // ** product not found
+      if (!isUser) res.send({ status: 404, data: "user not found" });
+    
+    // ** check if user send new image
+    if (req.file) {
+        req.body.image = req.file.path
+      }
+
+    const response = await User.findByIdAndUpdate(id, req.body, { new: true });
+    if (response) {
+      res.send({
+        status: 200,
+        data: response,
+      });
+    } else {
+      res.send({
+        status: 400,
+        data: `failed to update user`,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 // delete user by id
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await User.findByIdAndUpdate(id, { is_deleted: true });
+    const response = await User.findByIdAndDelete(id);
     if (response) {
       res.send({
         status: 200,

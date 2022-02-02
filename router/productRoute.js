@@ -7,7 +7,7 @@ const deleteImage = require("../utils/deleteImage");
 // get all Products
 router.get("/", async (req, res) => {
   try {
-    const response = await Product.find({ is_deleted: false });
+    const response = await Product.find({ is_deleted: false }).populate("author")
     res.send({
       data: {
         status: 200,
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 // create Product
-router.post("/add", isLoggedIn, upload.array("images"), async (req, res) => {
+router.post("/add", upload.array("images"), async (req, res) => {
   try {
     // ** when when user upload image req.body will hiject
     if (req.files) {

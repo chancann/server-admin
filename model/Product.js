@@ -2,12 +2,9 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    image: String,
+    image: [{data: String}],
     title: String,
-    category: {
-      type: mongoose.Types.ObjectId,
-      ref: "Category",
-    },
+    category: String,
     author: {
       type: mongoose.Types.ObjectId,
       ref: "User",
