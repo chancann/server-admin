@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const User = require("../model/User");
+const Product = require("../model/Product")
 const CryptoJS = require("crypto-js");
 const JWT = require("jsonwebtoken");
 const upload = require("../utils/multer");
@@ -184,6 +185,11 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
         req.body.image = req.file.path
       }
 
+    if (req.body.password !== isUser.password) {
+      const newPassword = CryptoJS.AES.encrypt(req.body.password, process.env.CRYPTO_SEC).toString()
+      req.body.password = newPassword
+    }
+
     const response = await User.findByIdAndUpdate(id, req.body, { new: true });
     if (response) {
       res.send({
@@ -205,17 +211,22 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await User.findByIdAndDelete(id);
-    if (response) {
-      res.send({
-        status: 200,
-        data: `user with id: ${id}, deleted`,
-      });
-    } else {
-      res.send({
-        status: 400,
-        data: `failed to delete user with id ${id}`,
-      });
+
+      const deletedProduct = await Product.deleteMany({author: id})
+    if (deletedProduct) {
+      const response = await User.findByIdAndDelete(id);
+      if (response) {
+        res.send({
+          status: 200,
+          data: `user with id: ${id}, deleted`,
+        });
+      } else {
+        res.send({
+          status: 400,
+          data: `failed to delete user with id ${id}`,
+        });
+      }
+      
     }
   } catch (error) {
     res.send(error);
