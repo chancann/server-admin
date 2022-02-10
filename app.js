@@ -28,8 +28,8 @@ mongoose
   .connect(process.env.MONGO_URL, { useNewUrlParser: true })
   .then(() => {
     console.log("Connected to database");
-    app.listen(process.env.PORT, () => {
-      console.log(`RUNNING AT ${process.env.PORT}`);
+    app.listen(8080, () => {
+      console.log(`RUNNING AT ${8080}`);
     });
   })
   .catch((err) => {

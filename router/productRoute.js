@@ -70,6 +70,27 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/user/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await Product.find({ author: id }).populate("author");
+
+    if (response) {
+      res.send({
+        status: 200,
+        data: response,
+      });
+    } else {
+      res.send({
+        status: 404,
+        data: `Failed to Update Product with id ${id}`,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 // update product
 router.put("/:id", isLoggedIn, requireAdmin, upload.array("images"), async (req, res) => {
   const { id } = req.params;
