@@ -92,7 +92,7 @@ router.get("/user/:id", async (req, res) => {
 });
 
 // update product
-router.put("/:id", isLoggedIn, requireAdmin, upload.array("images"), async (req, res) => {
+router.put("/:id", upload.array("images"), async (req, res) => {
   const { id } = req.params;
   try {
     // ** find product
