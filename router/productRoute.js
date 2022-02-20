@@ -6,8 +6,15 @@ const deleteImage = require("../utils/deleteImage");
 
 // get all Products
 router.get("/", async (req, res) => {
+  const { category } = req.query;
   try {
-    const response = await Product.find({ is_deleted: false }).populate("author");
+    let response;
+
+    if (category) {
+      response = await Product.find({ is_deleted: false, category: category }).populate("author");
+    } else {
+      response = await Product.find({ is_deleted: false }).populate("author");
+    }
     res.send({
       data: {
         status: 200,
