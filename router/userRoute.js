@@ -159,7 +159,7 @@ router.post("/verify/:id", async (req, res) => {
     const response = await User.findByIdAndUpdate(id, { is_verified: true }, { new: true });
 
     if (response) {
-      verifyNotifMailer(response.email);
+      verifyNotifMailer(response.email, "Website UMKM Sepatan - Verifikasi Berhasil");
       res.send({
         status: 200,
         data: "verified!",
