@@ -7,6 +7,7 @@ const upload = require("../utils/multer");
 const deleteImage = require("../utils/deleteImage");
 const { isLoggedIn, requireAdmin } = require("../middleware/auth");
 const nodemailerFunc = require("../utils/nodemailer");
+const verifyNotifMailer = require("../utils/verifyNotifMailer");
 
 // get all user
 router.get("/", async (req, res) => {
@@ -156,7 +157,9 @@ router.post("/verify/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const response = await User.findByIdAndUpdate(id, { is_verified: true }, { new: true });
+
     if (response) {
+      verifyNotifMailer(response.email);
       res.send({
         status: 200,
         data: "verified!",
