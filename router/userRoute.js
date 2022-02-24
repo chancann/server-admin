@@ -8,6 +8,7 @@ const deleteImage = require("../utils/deleteImage");
 const { isLoggedIn, requireAdmin } = require("../middleware/auth");
 const nodemailerFunc = require("../utils/nodemailer");
 const verifyNotifMailer = require("../utils/verifyNotifMailer");
+const notVerifyNotifMailed = require("../utils/notVerifyNotifMailed");
 
 // get all user
 router.get("/", async (req, res) => {
@@ -258,7 +259,16 @@ router.delete("/:id", async (req, res) => {
   try {
     const deletedProduct = await Product.deleteMany({ author: id });
     if (deletedProduct) {
-      const response = await User.findByIdAndDelete(id);
+      const response = await User.findByIdAndDelete(id, { new: true });
+      if (!response.is_verified) {
+        notVerifyNotifMailed(response.email, "Verifikasi Ditolak");
+        res.send({
+          status: 200,
+          data: `user with id: ${id}, deleted`,
+        });
+        return;
+      }
+
       if (response) {
         res.send({
           status: 200,
