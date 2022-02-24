@@ -77,7 +77,7 @@ router.put("/forget", async (req, res) => {
     // ** find user
     const isUser = await User.findOne({ email: req.body.email });
     // ** user not found
-    if (!isUser) res.send({ status: 404, data: "user not found" });
+    if (!isUser) res.send({ status: 404, data: "Pengguna tidak ditemukan!" });
 
     // ** check if user send new image
     if (isUser) {
@@ -98,7 +98,7 @@ router.put("/forget", async (req, res) => {
       if (response) {
         res.send({
           status: 200,
-          data: "Please check your email",
+          data: "Silahkan cek email anda!",
         });
       } else {
         res.send({
