@@ -42,7 +42,7 @@ async function verifyNotifMailer(to, subject) {
                   <tr>
                     <td style="padding: 0 35px">
                       <h1 style="color: #1e1e2d; font-weight: 500; margin: 0; font-size: 32px; font-family: 'Rubik', sans-serif">Selamat Verifikasi Berhasil</h1>
-                      <p style="color: #455056; font-size: 15px; line-height: 24px; margin-top: 2rem">Akun anda berhasil di verifikasi , Sekarang anda mempunyai hak akses unutk upload di WEB UMKN SEPATAN</p>
+                      <p style="color: #455056; font-size: 15px; line-height: 24px; margin-top: 2rem">Akun anda berhasil di verifikasi , Sekarang anda mempunyai hak akses untuk login di Web POJOK UMKM</p>
                       <a href="${process.env.MAIN_WEB}" style="background: #20e277; text-decoration: none !important; font-weight: 500; margin-top: 35px; color: #fff; text-transform: uppercase; font-size: 14px; padding: 10px 24px; display: inline-block; border-radius: 50px">Website</a>
                     </td>
                   </tr>
