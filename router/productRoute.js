@@ -172,4 +172,25 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// get detail user by id
+router.get("/details/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await Product.findOne({ _id: id });
+    if (response) {
+      res.send({
+        status: 200,
+        data: response,
+      });
+    } else {
+      res.send({
+        status: 400,
+        data: `failed to get product`,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 module.exports = router;
