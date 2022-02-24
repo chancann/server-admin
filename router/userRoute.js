@@ -259,7 +259,7 @@ router.delete("/:id", async (req, res) => {
   try {
     const deletedProduct = await Product.deleteMany({ author: id });
     if (deletedProduct) {
-      const response = await User.findByIdAndDelete(id, { new: true });
+      const response = await User.findByIdAndDelete(id);
       if (!response.is_verified) {
         notVerifyNotifMailed(response.email, "Verifikasi Ditolak");
         res.send({
